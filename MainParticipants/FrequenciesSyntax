@@ -1,0 +1,27 @@
+DATASET NAME main.
+USE ALL. 
+COMPUTE filter_$=(group = 1  & pro = 0). 
+VARIABLE LABELS filter_$ 'group = 1  & pro = 0 (FILTER)'. 
+VALUE LABELS filter_$ 0 'Not Selected' 1 'Selected'. 
+FORMATS filter_$ (f1.0). 
+FILTER BY filter_$. 
+EXECUTE.
+
+ 
+SORT CASES  BY sex readspint mathspint. 
+SPLIT FILE SEPARATE BY sex readspint mathspint.
+
+
+FREQUENCIES VARIABLES=readspint mathspint sex grade school int vscore qscore rtgrade rteff mtgrade mteff neutscom neutscor mmast minstruc rmast rinstruc cell 
+  /STATISTICS=STDDEV MEAN MEDIAN 
+  /FORMAT=LIMIT(10) 
+  /ORDER=ANALYSIS.
+
+
+
+SPLIT FILE OFF.
+
+
+FILTER OFF. 
+USE ALL. 
+EXECUTE.

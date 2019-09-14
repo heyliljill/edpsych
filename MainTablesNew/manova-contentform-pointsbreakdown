@@ -1,0 +1,141 @@
+DATASET NAME main.
+USE ALL. 
+COMPUTE filter_$=(group = 1  & pro = 0). 
+VARIABLE LABELS filter_$ 'group = 1  & pro = 0 (FILTER)'. 
+VALUE LABELS filter_$ 0 'Not Selected' 1 'Selected'. 
+FORMATS filter_$ (f1.0). 
+FILTER BY filter_$. 
+EXECUTE.
+
+DATASET COPY  mainCopy1 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy1.
+
+* 4-way.
+
+COMPUTE mrimp  = mrim1p  + mrim2p  + mrim3p .
+VARIABLE LABELS  mrimp  '# of p  represented in im level reading'. 
+EXECUTE.
+COMPUTE mriip  = mrii1p  + mrii2p  + mrii3p .
+VARIABLE LABELS  mriip  '# of p  represented in ii level reading'. 
+EXECUTE.
+COMPUTE mrbmp  = mrbm1p  + mrbm2p  + mrbm3p .
+VARIABLE LABELS  mrbmp  '# of p  represented in bm level reading'. 
+EXECUTE.
+COMPUTE mrbip  = mrbi1p  + mrbi2p  + mrbi3p .
+VARIABLE LABELS  mrbip  '# of p  represented in bi level reading'. 
+EXECUTE.
+GLM mrimp mriip mrbmp mrbip  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) 
+/EMMEANS=TABLES(sex*interest) 
+/EMMEANS=TABLES(sex*difficulty) 
+/EMMEANS=TABLES(readspint*interest) 
+/EMMEANS=TABLES(readspint*difficulty) 
+/EMMEANS=TABLES(readspint*sex) 
+/EMMEANS=TABLES(sex*interest*difficulty) 
+/EMMEANS=TABLES(readspint*sex*interest) 
+/EMMEANS=TABLES(readspint*sex*difficulty)
+/EMMEANS=TABLES(readspint*interest*difficulty) 
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+DATASET ACTIVATE main.
+DATASET CLOSE mainCopy1.
+
+* High Reading vs Low Reading Int.
+
+
+DATASET COPY  mainCopy2 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy2.
+
+
+COMPUTE mrimp  = mrim1p  + mrim2p  + mrim3p .
+VARIABLE LABELS  mrimp  '# of p  represented in im level reading'. 
+EXECUTE.
+COMPUTE mriip  = mrii1p  + mrii2p  + mrii3p .
+VARIABLE LABELS  mriip  '# of p  represented in ii level reading'. 
+EXECUTE.
+COMPUTE mrbmp  = mrbm1p  + mrbm2p  + mrbm3p .
+VARIABLE LABELS  mrbmp  '# of p  represented in bm level reading'. 
+EXECUTE.
+COMPUTE mrbip  = mrbi1p  + mrbi2p  + mrbi3p .
+VARIABLE LABELS  mrbip  '# of p  represented in bi level reading'. 
+EXECUTE.
+
+SORT CASES BY readspint.
+SPLIT FILE LAYERED BY readspint.
+GLM mrimp mriip mrbmp mrbip  BY sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(interest*difficulty) 
+/EMMEANS=TABLES(sex*interest) 
+/EMMEANS=TABLES(sex*difficulty) 
+/EMMEANS=TABLES(sex*interest*difficulty) 
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN= sex. 
+SPLIT FILE OFF.
+
+DATASET ACTIVATE main.
+DATASET CLOSE mainCopy2.
+
+
+* Low Reading Males vs. Females.
+
+DATASET COPY  mainCopy3 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy3.
+
+USE ALL. 
+COMPUTE filter_$=(group = 1  & pro = 0 & readspint = 2). 
+VARIABLE LABELS filter_$ 'group = 1  & pro = 0 & readspint = 2 (FILTER)'. 
+VALUE LABELS filter_$ 0 'Not Selected' 1 'Selected'. 
+FORMATS filter_$ (f1.0). 
+FILTER BY filter_$. 
+EXECUTE.
+
+COMPUTE mrimp  = mrim1p  + mrim2p  + mrim3p .
+VARIABLE LABELS  mrimp  '# of p  represented in im level reading'. 
+EXECUTE.
+COMPUTE mriip  = mrii1p  + mrii2p  + mrii3p .
+VARIABLE LABELS  mriip  '# of p  represented in ii level reading'. 
+EXECUTE.
+COMPUTE mrbmp  = mrbm1p  + mrbm2p  + mrbm3p .
+VARIABLE LABELS  mrbmp  '# of p  represented in bm level reading'. 
+EXECUTE.
+COMPUTE mrbip  = mrbi1p  + mrbi2p  + mrbi3p .
+VARIABLE LABELS  mrbip  '# of p  represented in bi level reading'. 
+EXECUTE.
+
+SORT CASES BY sex.
+SPLIT FILE LAYERED BY sex.
+GLM mrimp mriip mrbmp mrbip 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(interest*difficulty) 
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty. 
+SPLIT FILE OFF.
+
+DATASET ACTIVATE main.
+DATASET CLOSE mainCopy3.

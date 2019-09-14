@@ -1,0 +1,243 @@
+DATASET NAME main.
+USE ALL. 
+COMPUTE filter_$=(group = 1  & pro = 0). 
+VARIABLE LABELS filter_$ 'group = 1  & pro = 0 (FILTER)'. 
+VALUE LABELS filter_$ 0 'Not Selected' 1 'Selected'. 
+FORMATS filter_$ (f1.0). 
+FILTER BY filter_$. 
+EXECUTE.
+DATASET COPY  mainCopy1 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy1.
+recode mrimpara mriipara mrbmpara mrbipara (1=1) (else = 0).
+
+GLM mrimpara mriipara mrbmpara mrbipara  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy1.
+DATASET COPY  mainCopy2 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy2.
+recode mrimpara mriipara mrbmpara mrbipara (2=1) (else = 0).
+
+GLM mrimpara mriipara mrbmpara mrbipara  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy2.
+DATASET COPY  mainCopy3 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy3.
+recode mrimpara mriipara mrbmpara mrbipara (3=1) (else = 0).
+
+GLM mrimpara mriipara mrbmpara mrbipara  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy3.
+DATASET COPY  mainCopy4 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy4.
+recode mrimpara mriipara mrbmpara mrbipara (4=1) (else = 0).
+
+GLM mrimpara mriipara mrbmpara mrbipara  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy4.
+DATASET COPY  mainCopy5 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy5.
+recode mrimpara mriipara mrbmpara mrbipara (5=1) (else = 0).
+
+GLM mrimpara mriipara mrbmpara mrbipara  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(interest) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(difficulty) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(sex) ADJ(BONFERRONI)
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) COMPARE(readspint) ADJ(BONFERRONI)
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy5.

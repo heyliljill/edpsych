@@ -1,0 +1,73 @@
+DATASET NAME main.
+USE ALL. 
+COMPUTE filter_$=(group = 1  & pro = 0). 
+VARIABLE LABELS filter_$ 'group = 1  & pro = 0 (FILTER)'. 
+VALUE LABELS filter_$ 0 'Not Selected' 1 'Selected'. 
+FORMATS filter_$ (f1.0). 
+FILTER BY filter_$. 
+EXECUTE.
+
+
+* 4-way.
+
+DATASET COPY  mainCopy1 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy1.
+recode mrimpara mriipara mrbmpara mrbipara (5=1) (else = 0).
+
+GLM mrimpara mriipara mrbmpara mrbipara  BY readspint sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(readspint) COMPARE ADJ(BONFERRONI)
+/EMMEANS=TABLES(interest*difficulty) 
+/EMMEANS=TABLES(sex*interest) 
+/EMMEANS=TABLES(sex*difficulty) 
+/EMMEANS=TABLES(readspint*interest) 
+/EMMEANS=TABLES(readspint*difficulty) 
+/EMMEANS=TABLES(readspint*sex) 
+/EMMEANS=TABLES(sex*interest*difficulty) 
+/EMMEANS=TABLES(readspint*sex*interest) 
+/EMMEANS=TABLES(readspint*sex*difficulty) 
+/EMMEANS=TABLES(readspint*interest*difficulty) 
+/EMMEANS=TABLES(readspint*sex*interest*difficulty) 
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN=readspint sex readspint*sex.
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy1.
+
+
+* High Read vs Low Read interest.
+
+DATASET COPY  mainCopy2 WINDOW=FRONT.
+DATASET ACTIVATE mainCopy2.
+recode mrimpara mriipara mrbmpara mrbipara (5=1) (else = 0).
+
+
+SORT CASES BY readspint.
+SPLIT FILE LAYERED BY readspint.
+GLM mrimpara mriipara mrbmpara mrbipara  BY  sex 
+/WSFACTOR=interest 2 Polynomial difficulty 2 Polynomial 
+/METHOD=SSTYPE(3) 
+/EMMEANS=TABLES(OVERALL) 
+/EMMEANS=TABLES(interest) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(difficulty) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(sex) COMPARE ADJ(BONFERRONI) 
+/EMMEANS=TABLES(interest*difficulty) 
+/EMMEANS=TABLES(sex*interest) 
+/EMMEANS=TABLES(sex*difficulty) 
+/EMMEANS=TABLES(sex*interest*difficulty) 
+/PRINT=DESCRIPTIVE ETASQ
+/CRITERIA=ALPHA(.05) 
+/WSDESIGN=interest difficulty interest*difficulty 
+/DESIGN= sex.
+SPLIT FILE OFF.
+
+
+  DATASET ACTIVATE main.
+DATASET CLOSE mainCopy2.
